@@ -8,7 +8,32 @@ import csv
 from datetime import datetime
 import os
 
+# Task Trainer Session (3.75 minutes +/- 30 seconds per trial = 15 minutes total across 4 trials)
 participant_times = {
+    1: [3, 5, 4],
+    2: [235, 202, 196],
+    3: [242, 212, 210],
+    4: [209, 203, 242],
+    5: [201, 238, 242],
+    6: [195, 252, 202],
+    7: [255, 234, 252],
+    8: [251, 217, 222],
+    9: [217, 219, 209],
+    10: [251, 205, 230],
+    11: [235, 210, 237],
+    12: [210, 253, 254],
+    13: [231, 209, 231],
+    14: [211, 215, 237],
+    15: [197, 245, 213],
+    16: [206, 204, 228],
+    17: [221, 197, 217],
+    18: [222, 228, 239],
+    19: [249, 206, 217],
+    20: [248, 249, 226]
+}
+
+# OSCE/Simulation Session (5 minutes +/- 1 per trial = 20 minutes total across 4 trials)
+"""participant_times = {
     1: [3, 5, 4],
     2: [337, 297, 322],
     3: [301, 284, 326],
@@ -29,7 +54,7 @@ participant_times = {
     18: [296, 298, 347],
     19: [256, 357, 241],
     20: [319, 250, 321]
-}
+}"""
 
 CHIME_PATH = os.path.join("Assets", "subway.mp3")
 # EASY_TUTORIAL_IMAGE = os.path.join("Assets", "Easy.webp")  
@@ -533,13 +558,14 @@ class ExperimentGUI:
         self.paas_label = tk.Label(sel_frm, text="", font=("Helvetica",12,"bold"))
         self.paas_label.pack(side=tk.LEFT)
         tk.Label(self.root,
-                 text="What are your biggest sources of cognitive load? (select all that apply)",
+                 text="What are your biggest sources of cognitive load? (Select all that apply)",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         sources = [
-            "Task difficulty",
+            "Inherent task difficulty",
             "Unfamiliarity (e.g., equipment, procedures)",
             "Environmental distractions",
-            "Lack of automation"
+            "Lack of automation",
+            "Time pressure"
         ]
         self.q2_vars = {}
         for s in sources:
@@ -549,11 +575,12 @@ class ExperimentGUI:
             chk.pack(fill="x", padx=40)
             self.q2_vars[s] = var
         tk.Label(self.root,
-                 text="What cognitive strategies did you employ? (select all that apply)",
+                 text="What cognitive strategies did you employ to manage your cognitive load? (Select all that apply)",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         strategies = [
             "Automation of repetitive tasks",
-            "Chunking schemas",
+            "Chunking",
+            "Schemas (e.g., BOOTS or assessment triangles)",
             "Tactical pauses",
             "BTSF protocol"
         ]
@@ -799,7 +826,7 @@ class ExperimentGUI:
                                    font=("Helvetica",12,"bold"))
         self.paas_label.pack(side=tk.LEFT)
         tk.Label(self.root,
-                 text="What are your biggest sources of cognitive load? (select all that apply)",
+                 text="What are your biggest sources of cognitive load? Select all that apply.",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         sources = [
             "Task difficulty",
@@ -815,7 +842,7 @@ class ExperimentGUI:
             chk.pack(fill="x", padx=40)
             self.q2_vars[choice] = var
         tk.Label(self.root,
-                 text="What cognitive strategies did you employ? (select all that apply)",
+                 text="What cognitive strategies did you employ? Select all that apply.",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         strategies = [
             "Automation of repetitive tasks",
