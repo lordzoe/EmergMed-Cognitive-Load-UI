@@ -385,7 +385,7 @@ class ExperimentGUI:
         self.clear_screen()
         self.log_timestamp("Oxysoft Sync")
         tk.Label(self.root, text="Introduction to the PAAS Scale", font=("Helvetica", 18, "bold")).pack(pady=10)
-        explanation_text = "In this study, we'll be using a 9-point Paas scale as a tool to better understand your perceived mental effort. Mental effort can be defined as the amount of brain power you are exerting while performing tasks. The scale ranges from low mental effort (represented by a smiley face) to high mental effort (represented by a stressed face). There are no right or wrong answers—please rate honestly based on your experience."
+        explanation_text = "In this study, we'll be using a 9-point Paas scale as a tool to better understand your perceived mental effort. Mental effort can be defined as the amount of brain power you are exerting while performing tasks. The scale ranges from low mental effort (represented by a smiley face) to high mental effort (represented by a stressed face). There are no right or wrong answers. Please rate honestly based on your experience."
         text_frame = tk.Frame(self.root, width=800)
         text_frame.pack(pady=10)
         explanation_label = tk.Label(text_frame, text=explanation_text, font=("Helvetica", 16), 
@@ -403,7 +403,7 @@ class ExperimentGUI:
         self.clear_screen()
         self.log_timestamp("Practice Introduction Screen")
         tk.Label(self.root, text="Practice Session Introduction", font=("Helvetica", 18, "bold")).pack(pady=10)
-        explanation_text = "To help orient you to this scale, we'll guide you through two practice math problems. In the first scenario, you will solve a simple math problem requiring LOW mental effort. You will have 10 seconds to answer. You may use the paper and pencil provided to you if needed. Ready?"
+        explanation_text = "To help orient you to this scale, we'll guide you through two practice math problems. In the first scenario, you will solve a simple math problem requiring LOW mental effort. You will have 10 seconds to answer. Ready?"
         text_frame = tk.Frame(self.root, width=800)
         text_frame.pack(pady=20)
         explanation_label = tk.Label(text_frame, text=explanation_text, font=("Helvetica", 16), 
@@ -558,7 +558,7 @@ class ExperimentGUI:
         self.paas_label = tk.Label(sel_frm, text="", font=("Helvetica",12,"bold"))
         self.paas_label.pack(side=tk.LEFT)
         tk.Label(self.root,
-                 text="What are your biggest sources of cognitive load? (Select all that apply)",
+                 text="What are your biggest sources of cognitive load? Select all that apply.",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         sources = [
             "Inherent task difficulty",
@@ -575,7 +575,7 @@ class ExperimentGUI:
             chk.pack(fill="x", padx=40)
             self.q2_vars[s] = var
         tk.Label(self.root,
-                 text="What cognitive strategies did you employ to manage your cognitive load? (Select all that apply)",
+                 text="What cognitive strategies did you employ to manage your cognitive load? Select all that apply.",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         strategies = [
             "Automation of repetitive tasks",
@@ -674,7 +674,7 @@ class ExperimentGUI:
 
     def show_experiment_screen(self):
         self.clear_screen()
-        tk.Label(self.root, text=f"Baseline period is over. Ready to start simulation for Participant {self.participant_id_var.get()}", font=("Helvetica", 16)).pack(pady=20)
+        tk.Label(self.root, text=f"Baseline resting phase is over. Ready to start simulation for Participant {self.participant_id_var.get()}", font=("Helvetica", 16)).pack(pady=20)
         self.start_button = tk.Button(self.root, text="Start Simulation", 
                                     command=self.start_experiment,
                                     font=("Helvetica", 12), bg="#4CAF50", fg="white", padx=20, pady=10)
@@ -829,10 +829,11 @@ class ExperimentGUI:
                  text="What are your biggest sources of cognitive load? Select all that apply.",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         sources = [
-            "Task difficulty",
+            "Inherent task difficulty",
             "Unfamiliarity (e.g., equipment, procedures)",
             "Environmental distractions",
-            "Lack of automation"
+            "Lack of automation",
+            "Time pressure"
         ]
         self.q2_vars = {}
         for choice in sources:
@@ -842,11 +843,12 @@ class ExperimentGUI:
             chk.pack(fill="x", padx=40)
             self.q2_vars[choice] = var
         tk.Label(self.root,
-                 text="What cognitive strategies did you employ? Select all that apply.",
+                 text="What cognitive strategies did you employ to manage your cognitive load? Select all that apply.",
                  font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
         strategies = [
             "Automation of repetitive tasks",
-            "Chunking schemas",
+            "Chunking",
+            "Schemas (e.g., BOOTS or assessment triangles)",
             "Tactical pauses",
             "BTSF protocol"
         ]
