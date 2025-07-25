@@ -8,28 +8,28 @@ import csv
 from datetime import datetime
 import os
 
-# Task Trainer Session (3.75 minutes +/- 30 seconds per trial = 15 minutes total across 4 trials)
+# Task Trainer Session (15 minutes +/- 3 per trial = 1 hour total across 4 trials)
 participant_times = {
     1: [3, 5, 4],
-    2: [235, 202, 196],
-    3: [242, 212, 210],
-    4: [209, 203, 242],
-    5: [201, 238, 242],
-    6: [195, 252, 202],
-    7: [255, 234, 252],
-    8: [251, 217, 222],
-    9: [217, 219, 209],
-    10: [251, 205, 230],
-    11: [235, 210, 237],
-    12: [210, 253, 254],
-    13: [231, 209, 231],
-    14: [211, 215, 237],
-    15: [197, 245, 213],
-    16: [206, 204, 228],
-    17: [221, 197, 217],
-    18: [222, 228, 239],
-    19: [249, 206, 217],
-    20: [248, 249, 226]
+    2: [860, 845, 834],
+    3: [791, 772, 1066],
+    4: [999, 764, 1022],
+    5: [936, 736, 735],
+    6: [767, 831, 839],
+    7: [978, 1028, 733],
+    8: [1007, 821, 1052],
+    9: [1079, 999, 934],
+    10: [832, 949, 1021],
+    11: [862, 723, 801],
+    12: [1077, 936, 894],
+    13: [862, 799, 830],
+    14: [892, 772, 767],
+    15: [914, 769, 903],
+    16: [896, 1029, 855],
+    17: [742, 955, 994],
+    18: [783, 913, 760],
+    19: [1002, 870, 1041],
+    20: [1036, 905, 1015]
 }
 
 # OSCE/Simulation Session (5 minutes +/- 1 per trial = 20 minutes total across 4 trials)
@@ -504,6 +504,13 @@ class ExperimentGUI:
             self.submit_tutorial_answer(next_step, tutorial_type)
 
     def submit_tutorial_answer(self, next_step, tutorial_type):
+        answer = self.answer_entry.get() if hasattr(self, 'answer_entry') else ""
+        if self.countdown_time_left > 0 and not answer.strip():
+            messagebox.showwarning(
+                "Answer Required",
+                "Please enter your answer before submitting."
+            )
+            return
         if self.countdown_job:
             try:
                 self.root.after_cancel(self.countdown_job)
@@ -557,40 +564,6 @@ class ExperimentGUI:
         tk.Label(sel_frm, text="Your selection: ", font=("Helvetica",12)).pack(side=tk.LEFT)
         self.paas_label = tk.Label(sel_frm, text="", font=("Helvetica",12,"bold"))
         self.paas_label.pack(side=tk.LEFT)
-        tk.Label(self.root,
-                 text="What are your biggest sources of cognitive load? Select all that apply.",
-                 font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
-        sources = [
-            "Inherent task difficulty",
-            "Unfamiliarity (e.g., equipment, procedures)",
-            "Environmental distractions",
-            "Lack of automation",
-            "Time pressure"
-        ]
-        self.q2_vars = {}
-        for s in sources:
-            var = tk.IntVar()
-            chk = tk.Checkbutton(self.root, text=s, variable=var,
-                                 anchor="w", font=("Helvetica",11))
-            chk.pack(fill="x", padx=40)
-            self.q2_vars[s] = var
-        tk.Label(self.root,
-                 text="What cognitive strategies did you employ to manage your cognitive load? Select all that apply.",
-                 font=("Helvetica",12,"bold")).pack(pady=(20,5), anchor="w", padx=20)
-        strategies = [
-            "Automation of repetitive tasks",
-            "Chunking",
-            "Schemas (e.g., BOOTS or assessment triangles)",
-            "Tactical pauses",
-            "BTSF protocol"
-        ]
-        self.q3_vars = {}
-        for s in strategies:
-            var = tk.IntVar()
-            chk = tk.Checkbutton(self.root, text=s, variable=var,
-                                 anchor="w", font=("Helvetica",11))
-            chk.pack(fill="x", padx=40)
-            self.q3_vars[s] = var
         tk.Button(self.root, text="Submit Rating",
                   command=(self.submit_easy_tutorial_paas if tutorial_type=="Easy"
                            else self.submit_hard_tutorial_paas),
@@ -598,8 +571,12 @@ class ExperimentGUI:
                   padx=20, pady=10).pack(pady=30)
 
     def submit_easy_tutorial_paas(self):
-        q2_sel = [k for k, v in self.q2_vars.items() if v.get()]
-        q3_sel = [k for k, v in self.q3_vars.items() if v.get()]
+        if self.paas_value.get() == 0:
+            messagebox.showwarning(
+                "No Rating Selected",
+                "Please select your PAAS rating before submitting."
+            )
+            return
         now     = datetime.now()
         elapsed = time.time() - self.experiment_start_time if self.experiment_start_time else 0
         self.paas_scores.append({
@@ -609,8 +586,6 @@ class ExperimentGUI:
             'score_timestamp' : now.strftime("%Y-%m-%d %H:%M:%S"),
             'elapsed_time'    : f"{elapsed:.3f}",
             'real_time'       : now.strftime("%Y-%m-%d %H:%M:%S.%f"),
-            'paas_question_2' : ";".join(q2_sel),
-            'paas_question_3' : ";".join(q3_sel),
         })
         copied = next(
             (e for e in self.timestamps
@@ -628,8 +603,12 @@ class ExperimentGUI:
         self.show_hard_tutorial_screen()
 
     def submit_hard_tutorial_paas(self):
-        q2_sel = [k for k, v in self.q2_vars.items() if v.get()]
-        q3_sel = [k for k, v in self.q3_vars.items() if v.get()]
+        if self.paas_value.get() == 0:
+            messagebox.showwarning(
+                "No Rating Selected",
+                "Please select your PAAS rating before submitting."
+            )
+            return
         now     = datetime.now()
         elapsed = time.time() - self.experiment_start_time if self.experiment_start_time else 0
         self.paas_scores.append({
@@ -639,8 +618,6 @@ class ExperimentGUI:
             'score_timestamp' : now.strftime("%Y-%m-%d %H:%M:%S"),
             'elapsed_time'    : f"{elapsed:.3f}",
             'real_time'       : now.strftime("%Y-%m-%d %H:%M:%S.%f"),
-            'paas_question_2' : ";".join(q2_sel),
-            'paas_question_3' : ";".join(q3_sel),
         })
         copied = next(
             (e for e in self.timestamps
@@ -930,6 +907,12 @@ class ExperimentGUI:
         self.paas_label.config(text=str(value))
     
     def submit_paas_and_continue(self, trial_number):
+        if self.paas_value.get() == 0:
+            messagebox.showwarning(
+                "No Rating Selected",
+                "Please select your PAAS rating before submitting."
+            )
+            return
         q2_sel = [k for k, v in self.q2_vars.items() if v.get()]
         q3_sel = [k for k, v in self.q3_vars.items() if v.get()]
         now     = datetime.now()
@@ -950,6 +933,12 @@ class ExperimentGUI:
         self.run_trial()
 
     def submit_baseline_paas(self):
+        if self.paas_value.get() == 0:
+            messagebox.showwarning(
+                "No Rating Selected",
+                "Please select your PAAS rating before submitting."
+            )
+            return
         now     = datetime.now()
         elapsed = time.time() - self.experiment_start_time if self.experiment_start_time else 0
         self.paas_scores.append({
@@ -964,6 +953,12 @@ class ExperimentGUI:
         self.show_experiment_screen()
 
     def submit_paas_and_finish(self, trial_number):
+        if self.paas_value.get() == 0:
+            messagebox.showwarning(
+                "No Rating Selected",
+                "Please select your PAAS rating before submitting."
+            )
+            return
         q2_sel = [k for k, v in self.q2_vars.items() if v.get()]
         q3_sel = [k for k, v in self.q3_vars.items() if v.get()]
         now     = datetime.now()
@@ -982,6 +977,12 @@ class ExperimentGUI:
         self.show_finish_screen()
 
     def submit_paas_and_terminate(self, trial_number):
+        if self.paas_value.get() == 0:
+            messagebox.showwarning(
+                "No Rating Selected",
+                "Please select your PAAS rating before submitting."
+            )
+            return
         q2_sel = [k for k, v in self.q2_vars.items() if v.get()]
         q3_sel = [k for k, v in self.q3_vars.items() if v.get()]
         now     = datetime.now()
